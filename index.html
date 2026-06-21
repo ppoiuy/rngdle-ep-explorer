@@ -86,6 +86,7 @@ a:hover { color: var(--text); }
     <select id="filterLen"><option value="0">All lengths</option><option value="1">1 digit</option><option value="2">2 digits</option><option value="3">3 digits</option><option value="4">4 digits</option><option value="5">5 digits</option><option value="6">6 digits</option></select>
     <select id="sortSelect"><option value="ep-desc">EP ↓</option><option value="ep-asc">EP ↑</option><option value="num">Number</option><option value="count">Badge count</option></select>
     <label style="font-size:12px;color:var(--text-2)">≥ <input type="number" id="minEp" value="0" style="width:70px"></label>
+    <input type="text" id="searchNum" placeholder="Search number…" style="width:110px;font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:3px">
     <button id="resetBtn">Reset</button>
   </div>
 </header>
@@ -500,7 +501,7 @@ function renderTable(){
     if(badges.length>5){
       tags+='<span class="badge-more">+'+(badges.length-5)+' more</span>';
     }
-    h+='<tr><td class="num" onclick="showDetail('+row.number+')">'+row.number.toLocaleString()+'</td>'+
+    h+='<tr><td class="num" onclick="showDetail('+row.number+')">'+String(row.number)+'</td>'+
       '<td><strong>'+formatEP(row.totalEP)+'</strong></td><td>'+len+'</td><td>'+row.count+'</td>'+
       '<td><div class="badge-tags">'+(tags||'\u2014')+' <span class="view-btn" onclick="showDetail('+row.number+')">View</span></div></td></tr>';
   }
@@ -529,11 +530,15 @@ function goPage(p){currentPage=p;renderTable()}
 function applyFilters(){
   filterLen=parseInt(document.getElementById('filterLen').value);
   minEp=parseInt(document.getElementById('minEp').value)||0;
+  var searchRaw=document.getElementById('searchNum').value.replace(/\s+/g,'');
+  var searchNum=searchRaw?parseInt(searchRaw,10):-1;
+  if(!isNaN(searchNum)&&(searchNum<0||searchNum>=TOTAL_NUMBERS))searchNum=-1;
   filtered=[];
   for(var i=0;i<allData.length;i++){
     var r=allData[i];var len=r.len||String(r.number).length;
     if(filterLen>0&&len!==filterLen)continue;
     if(r.totalEP<minEp)continue;
+    if(searchNum>=0&&r.number!==searchNum)continue;
     filtered.push(r);
   }
   var pct=allData.length>0?(filtered.length/allData.length*100):0;
