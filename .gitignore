@@ -1,0 +1,2 @@
+# Ignore temporary cache files, but NOT ep-cache.bin (needed for GitHub Pages)
+*.tmp
