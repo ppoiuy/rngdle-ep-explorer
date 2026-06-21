@@ -548,6 +548,7 @@ function applyFilters(){
 
 document.getElementById('filterLen').addEventListener('change',applyFilters);
 document.getElementById('minEp').addEventListener('input',applyFilters);
+document.getElementById('searchNum').addEventListener('input',applyFilters);
 document.getElementById('sortSelect').addEventListener('change',function(){
   var v=this.value;
   if(v==='ep-desc'){sortField='totalEP';sortDir=-1}
@@ -559,6 +560,7 @@ document.getElementById('sortSelect').addEventListener('change',function(){
 document.getElementById('resetBtn').addEventListener('click',function(){
   document.getElementById('filterLen').value='0';
   document.getElementById('minEp').value='0';
+  document.getElementById('searchNum').value='';
   document.getElementById('sortSelect').value='ep-desc';
   sortField='totalEP';sortDir=-1;applyFilters()
 });
