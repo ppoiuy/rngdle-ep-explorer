@@ -87,7 +87,6 @@ a:hover { color: var(--text); }
     <select id="sortSelect"><option value="ep-desc">EP ↓</option><option value="ep-asc">EP ↑</option><option value="num">Number</option><option value="count">Badge count</option></select>
     <label style="font-size:12px;color:var(--text-2)">≥ <input type="number" id="minEp" value="0" style="width:70px"></label>
     <button id="resetBtn">Reset</button>
-    <button id="dlCacheBtn" style="display:none">Download Cache</button>
   </div>
 </header>
 <div class="progress-wrap">
@@ -99,6 +98,7 @@ a:hover { color: var(--text); }
 <div class="container">
   <div id="tableWrap"><div class="empty">Computing… results appear progressively.</div></div>
   <div class="pagination" id="pagination"></div>
+  <button id="dlCacheBtn" style="display:none;font-size:10px;color:var(--text-3);border:1px solid var(--border);background:var(--surface);padding:3px 8px;border-radius:3px;cursor:pointer;float:right">Download Cache</button>
 </div>
 <div class="modal-overlay" id="modal"><div class="modal">
   <button class="close" id="modalClose">&times;</button>
