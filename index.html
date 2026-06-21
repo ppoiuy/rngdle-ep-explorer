@@ -454,14 +454,17 @@ function compute(n){
 var ROWS_PER_PAGE=100;
 var TOTAL_NUMBERS=1000000;
 var allData=[];
-var filtered=[];
 var currentPage=1;
 var sortField='totalEP';
 var sortDir=-1;
 var filterLen=0;
 var minEp=0;
+var searchNum=-1;
 var renderPending=false;
 var badgeCache={};
+var sortCache=null;
+var sortCacheField='';
+var sortCacheDir=0;
 
 function getBadges(n){
   if(!badgeCache[n])badgeCache[n]=compute(n);
@@ -473,14 +476,29 @@ function formatEP(v){return v.toLocaleString()}
 
 function renderTable(){
   var wrap=document.getElementById('tableWrap');
-  var sorted=filtered.slice().sort(function(a,b){
-    var cmp=0;
-    if(sortField==='num')cmp=a.number-b.number;
-    else if(sortField==='totalEP')cmp=a.totalEP-b.totalEP;
-    else if(sortField==='count')cmp=a.count-b.count;
-    else if(sortField==='len')cmp=(a.len||String(a.number).length)-(b.len||String(b.number).length);
-    return cmp*sortDir;
-  });
+  if(sortCache===null||sortCacheField!==sortField||sortCacheDir!==sortDir){
+    sortCache=allData.slice().sort(function(a,b){
+      var cmp=0;
+      if(sortField==='num')cmp=a.number-b.number;
+      else if(sortField==='totalEP')cmp=a.totalEP-b.totalEP;
+      else if(sortField==='count')cmp=a.count-b.count;
+      else if(sortField==='len')cmp=(a.len||String(a.number).length)-(b.len||String(b.number).length);
+      return cmp*sortDir;
+    });
+    sortCacheField=sortField;
+    sortCacheDir=sortDir;
+  }
+  var sorted=[];
+  for(var i=0;i<sortCache.length;i++){
+    var r=sortCache[i];
+    var len=r.len||String(r.number).length;
+    if(filterLen>0&&len!==filterLen)continue;
+    if(r.totalEP<minEp)continue;
+    if(searchNum>=0&&r.number!==searchNum)continue;
+    sorted.push(r);
+  }
+  var pct=allData.length>0?(sorted.length/allData.length*100):0;
+  document.getElementById('percentile').textContent=sorted.length.toLocaleString()+' numbers ('+pct.toFixed(4)+'%) ≥ '+minEp.toLocaleString()+' EP';
   var totalPages=Math.max(1,Math.ceil(sorted.length/ROWS_PER_PAGE));
   if(currentPage>totalPages)currentPage=totalPages;
   var start=(currentPage-1)*ROWS_PER_PAGE;
@@ -538,19 +556,9 @@ function applyFilters(){
   minEp=parseInt(document.getElementById('minEp').value)||0;
   var rawValue=document.getElementById('searchNum').value;
   var searchRaw=rawValue.replace(/[^0-9]/g,'');
-  var searchNum=searchRaw?parseInt(searchRaw,10):-1;
+  searchNum=searchRaw?parseInt(searchRaw,10):-1;
   if(isNaN(searchNum))searchNum=-1;
   if(rawValue&&(searchNum<0||searchNum>=TOTAL_NUMBERS)){currentPage=1;renderTable();return}
-  filtered=[];
-  for(var i=0;i<allData.length;i++){
-    var r=allData[i];var len=r.len||String(r.number).length;
-    if(filterLen>0&&len!==filterLen)continue;
-    if(r.totalEP<minEp)continue;
-    if(searchNum>=0&&r.number!==searchNum)continue;
-    filtered.push(r);
-  }
-  var pct=allData.length>0?(filtered.length/allData.length*100):0;
-  document.getElementById('percentile').textContent=filtered.length.toLocaleString()+' numbers ('+pct.toFixed(4)+'%) ≥ '+minEp.toLocaleString()+' EP';
   currentPage=1;renderTable()
 }
 
@@ -665,6 +673,7 @@ function processChunk(){
     allData.push(res);
     batch.push({number:res.number,totalEP:res.totalEP,count:res.count,len:res.len||String(res.number).length});
   }
+  sortCache=null;
   nextNum=end;
   if(db){
     dbSaveBatch(db,batch).catch(function(err){console.warn('IDB save failed',err)});
@@ -703,7 +712,7 @@ function loadBinaryCache(){
     var count=dv.getUint32(5,true);
     if(count!==TOTAL_NUMBERS)throw new Error('Count mismatch');
     var off=9;
-    allData=[];
+    allData=[];sortCache=null;
     for(var n=0;n<count;n++){
       allData.push({
         number:n,
@@ -763,6 +772,7 @@ loadBinaryCache().catch(function(){
           if(!r.len)r.len=String(r.number).length;
           allData.push(r);
         }
+        sortCache=null;
         nextNum=TOTAL_NUMBERS;
         applyFilters();
         pText.textContent='Loaded from cache ('+allData.length.toLocaleString()+' numbers).';
@@ -776,6 +786,7 @@ loadBinaryCache().catch(function(){
           if(!r.len)r.len=String(r.number).length;
           allData.push(r);
         }
+        sortCache=null;
         nextNum=allData.length;
         pText.textContent='Resuming from '+nextNum.toLocaleString()+'...';
         applyFilters();
