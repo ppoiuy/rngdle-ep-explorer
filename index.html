@@ -530,11 +530,11 @@ function goPage(p){currentPage=p;renderTable()}
 function applyFilters(){
   filterLen=parseInt(document.getElementById('filterLen').value);
   minEp=parseInt(document.getElementById('minEp').value)||0;
-  var searchRaw=document.getElementById('searchNum').value.replace(/[^0-9]/g,'');
+  var rawValue=document.getElementById('searchNum').value;
+  var searchRaw=rawValue.replace(/[^0-9]/g,'');
   var searchNum=searchRaw?parseInt(searchRaw,10):-1;
   if(isNaN(searchNum))searchNum=-1;
-  if(searchNum>=TOTAL_NUMBERS)searchNum=-1;
-  if(searchRaw&&searchNum<0){currentPage=1;renderTable();return}
+  if(rawValue&&(searchNum<0||searchNum>=TOTAL_NUMBERS)){currentPage=1;renderTable();return}
   filtered=[];
   for(var i=0;i<allData.length;i++){
     var r=allData[i];var len=r.len||String(r.number).length;
