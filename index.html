@@ -556,7 +556,11 @@ function applyFilters(){
 
 document.getElementById('filterLen').addEventListener('change',applyFilters);
 document.getElementById('minEp').addEventListener('input',applyFilters);
-document.getElementById('searchNum').addEventListener('input',applyFilters);
+document.getElementById('searchNum').addEventListener('input',function(){
+  var v=this.value;
+  if(v&&!/^[0-9,\s]*$/.test(v))return;
+  applyFilters();
+});
 document.getElementById('sortSelect').addEventListener('change',function(){
   var v=this.value;
   if(v==='ep-desc'){sortField='totalEP';sortDir=-1}
