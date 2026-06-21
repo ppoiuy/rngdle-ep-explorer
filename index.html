@@ -532,7 +532,9 @@ function applyFilters(){
   minEp=parseInt(document.getElementById('minEp').value)||0;
   var searchRaw=document.getElementById('searchNum').value.replace(/\s+/g,'');
   var searchNum=searchRaw?parseInt(searchRaw,10):-1;
-  if(!isNaN(searchNum)&&(searchNum<0||searchNum>=TOTAL_NUMBERS))searchNum=-1;
+  if(isNaN(searchNum))searchNum=-1;
+  if(searchNum>=TOTAL_NUMBERS)searchNum=-1;
+  if(searchRaw&&searchNum<0){currentPage=1;renderTable();return}
   filtered=[];
   for(var i=0;i<allData.length;i++){
     var r=allData[i];var len=r.len||String(r.number).length;
