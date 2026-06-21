@@ -461,6 +461,12 @@ var sortDir=-1;
 var filterLen=0;
 var minEp=0;
 var renderPending=false;
+var badgeCache={};
+
+function getBadges(n){
+  if(!badgeCache[n])badgeCache[n]=compute(n);
+  return badgeCache[n];
+}
 
 function rarityColor(r){var map={Mythic:'var(--mythic)',Anomaly:'var(--anomaly)',Epic:'var(--epic)',Rare:'var(--rare)',Uncommon:'var(--uncommon)',Common:'var(--common)'};return map[r]||'#888'}
 function formatEP(v){return v.toLocaleString()}
@@ -490,7 +496,7 @@ function renderTable(){
   for(var r=0;r<page.length;r++){
     var row=page[r];
     var len=row.len||String(row.number).length;
-    var badges=row.badges||compute(row.number).badges;
+    var badges=row.badges||getBadges(row.number).badges;
     var topB=[];for(var i=0;i<badges.length;i++){if(badges[i].ep>0)topB.push(badges[i]);if(topB.length>=5)break}
     var tags='';
     for(var i=0;i<topB.length;i++){
