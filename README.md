@@ -1,7 +1,10 @@
 # RNGdle EP Explorer
 
-*Updated June 21, 2026*
+Browse all 1,000,000 possible RNGdle numbers (0–999,999) and their total EP.
 
-Browse all 1,000,000 possible RNGdle numbers (0–999,999) and their total Entropy Points, sorted and filtered by EP, digit length, and badge count.
+- Sort by EP, number, or badge count
+- Filter by digit length or minimum EP
+- Search for any number
+- Spoof a share card for any number as if you rolled it yourself
 
-[Link](https://ppoiuy.github.io/rngdle-ep-explorer)
+[Live page](https://ppoiuy.github.io/rngdle-ep-explorer)
