@@ -54,6 +54,8 @@ input[type=number]:focus { outline: none; border-color: var(--text-2); }
 .badge-more { font-size: 10px; color: var(--text-3); cursor: default; padding: 1px 4px; }
 .view-btn { font-size: 10px; cursor: pointer; color: var(--text-2); padding: 1px 6px; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); }
 .view-btn:hover { background: var(--surface-hover); color: var(--text); }
+.share-btn { font-size: 10px; cursor: pointer; color: var(--text-2); padding: 1px 6px; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); }
+.share-btn:hover { background: var(--surface-hover); color: var(--text); }
 .tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); font-size: 11px; padding: 6px 10px; border-radius: 4px; white-space: nowrap; z-index: 50; pointer-events: none; line-height: 1.4; text-align: center; }
 .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--text); }
 .badge-tag:hover .tooltip { display: block; }
@@ -78,6 +80,7 @@ input[type=number]:focus { outline: none; border-color: var(--text-2); }
 a { color: var(--text-2); }
 a:hover { color: var(--text); }
 </style>
+<link rel="preload" href="ep-cache.bin" as="fetch" crossorigin="anonymous">
 </head>
 <body>
 <header>
@@ -472,7 +475,48 @@ function getBadges(n){
 }
 
 function rarityColor(r){var map={Mythic:'var(--mythic)',Anomaly:'var(--anomaly)',Epic:'var(--epic)',Rare:'var(--rare)',Uncommon:'var(--uncommon)',Common:'var(--common)'};return map[r]||'#888'}
+function raritySquare(r){var m={Mythic:'\u{1F7E5}',Anomaly:'\u{1F7E7}',Epic:'\u{1F7EA}',Rare:'\u{1F7E6}',Uncommon:'\u{1F7E9}',Common:'\u{2B1C}',Trash:'\u{1F7EB}'};return m[r]||'\u{2B1C}'}
 function formatEP(v){return v.toLocaleString()}
+function percInfo(totalEP){
+  if(allData.length===0)return{sq:'\u{2B1C}',label:'COMMON',pct:''};
+  var below=0,above=0;
+  for(var i=0;i<allData.length;i++){
+    var e=allData[i].totalEP;
+    if(e<totalEP)below++;else if(e>totalEP)above++;
+  }
+  var pBelow=below/allData.length*100;
+  var pAbove=above/allData.length*100;
+  var r;
+  if(pBelow<1)r='Trash';
+  else if(pBelow<50)r='Common';
+  else if(pBelow<75)r='Uncommon';
+  else if(pBelow<90)r='Rare';
+  else if(pBelow<95)r='Epic';
+  else if(pBelow<99)r='Anomaly';
+  else r='Mythic';
+  var pct=r==='Trash'?'Bottom 1%':r==='Common'?'':('Top '+Math.round(pAbove)+'%');
+  return{sq:raritySquare(r),label:r.toUpperCase(),pct:r==='Common'?'':' • '+pct};
+}
+function copyShare(n){
+  var b=badgeCache[n]||compute(n);
+  var pi=percInfo(b.totalEP);
+  var nonZero=b.badges.filter(function(x){return x.ep>0});
+  var top=nonZero.slice(0,3);
+  var lines=['RNGdle \u{1F3B2} '+String(n),'',
+    pi.sq+' '+pi.label+pi.pct,''];
+  for(var i=0;i<top.length;i++){
+    var bg=top[i];
+    lines.push(raritySquare(bg.rarity)+' '+bg.emoji+' '+bg.label);
+  }
+  var rem=b.count-3;
+  if(rem>0)lines.push('+'+rem+' more');
+  lines.push('',''+b.totalEP.toLocaleString()+' EP','https://rngdle.com/');
+  var text=lines.join('\n');
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=document.querySelector('.share-btn[data-n="'+n+'"]');
+    if(btn){btn.textContent='Copied!';setTimeout(function(){btn.textContent='Share'},2000)}
+  }).catch(function(){});
+}
 
 function renderTable(){
   var wrap=document.getElementById('tableWrap');
@@ -515,19 +559,19 @@ function renderTable(){
     var row=page[r];
     var len=row.len||String(row.number).length;
     var badges=row.badges||getBadges(row.number).badges;
-    var topB=[];for(var i=0;i<badges.length;i++){if(badges[i].ep>0)topB.push(badges[i]);if(topB.length>=5)break}
+    var topB=[];for(var i=0;i<badges.length;i++){if(badges[i].ep>0)topB.push(badges[i]);if(topB.length>=3)break}
     var tags='';
     for(var i=0;i<topB.length;i++){
       var b=topB[i];
       var tip=(b.desc||'')+(b.prob?' | '+b.prob.toFixed(4)+'%':'')+' | '+b.rarity;
       tags+='<span class="badge-tag" style="border-color:'+rarityColor(b.rarity)+';color:'+rarityColor(b.rarity)+'">'+b.emoji+' '+b.ep.toLocaleString()+'<span class="tooltip">'+tip+'</span></span>';
     }
-    if(badges.length>5){
-      tags+='<span class="badge-more">+'+(badges.length-5)+' more</span>';
+    if(badges.length>3){
+      tags+='<span class="badge-more">+'+(badges.length-3)+' more</span>';
     }
     h+='<tr><td class="num" onclick="showDetail('+row.number+')">'+String(row.number)+'</td>'+
       '<td><strong>'+formatEP(row.totalEP)+'</strong></td><td>'+len+'</td><td>'+row.count+'</td>'+
-      '<td><div class="badge-tags">'+(tags||'\u2014')+' <span class="view-btn" onclick="showDetail('+row.number+')">View</span></div></td></tr>';
+      '<td><div class="badge-tags">'+(tags||'\u2014')+' <span class="view-btn" onclick="showDetail('+row.number+')">View</span> <span class="share-btn" data-n="'+row.number+'" onclick="copyShare('+row.number+')">Share</span></div></td></tr>';
   }
   h+='</tbody></table>';
   wrap.innerHTML=h;
