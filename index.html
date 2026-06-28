@@ -478,7 +478,7 @@ function rarityColor(r){var map={Mythic:'var(--mythic)',Anomaly:'var(--anomaly)'
 function raritySquare(r){var m={Mythic:'\u{1F7E5}',Anomaly:'\u{1F7E7}',Epic:'\u{1F7EA}',Rare:'\u{1F7E6}',Uncommon:'\u{1F7E9}',Common:'\u{2B1C}',Trash:'\u{1F7EB}'};return m[r]||'\u{2B1C}'}
 function formatEP(v){return v.toLocaleString()}
 function percInfo(totalEP){
-  if(allData.length===0)return{sq:'\u{2B1C}',label:'COMMON',pct:''};
+  if(allData.length===0)return{sq:'\u{2B1C}',label:'COMMON',pct:' • 0%'};
   var below=0,above=0;
   for(var i=0;i<allData.length;i++){
     var e=allData[i].totalEP;
@@ -494,8 +494,10 @@ function percInfo(totalEP){
   else if(pBelow<95)r='Epic';
   else if(pBelow<99)r='Anomaly';
   else r='Mythic';
-  var pct=r==='Trash'?'Bottom 1%':r==='Common'?'':('Top '+Math.round(pAbove)+'%');
-  return{sq:raritySquare(r),label:r.toUpperCase(),pct:r==='Common'?'':' • '+pct};
+  var pct=r==='Uncommon'||r==='Rare'||r==='Epic'||r==='Anomaly'||r==='Mythic'
+    ?'Top '+Math.round(pAbove)+'%'
+    :'Bottom '+Math.round(pBelow)+'%';
+  return{sq:raritySquare(r),label:r.toUpperCase(),pct:' • '+pct};
 }
 function copyShare(n){
   var b=badgeCache[n]||compute(n);
