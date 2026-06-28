@@ -7,4 +7,4 @@ Browse all 1,000,000 possible RNGdle numbers (0–999,999) and their total EP.
 - Search for any number
 - Spoof a share card for any number as if you rolled it yourself
 
-[Live page](https://ppoiuy.github.io/rngdle-ep-explorer)
+[Page](https://ppoiuy.github.io/rngdle-ep-explorer)
