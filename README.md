@@ -1,6 +1,6 @@
 # RNGdle EP Explorer
 
-Browse all 1,000,000 possible RNGdle numbers (0–999,999) and their total EP.
+Browse all 1,000,001 possible RNGdle numbers (0–1,000,000) and their total EP.
 
 - Sort by EP, number, or badge count
 - Filter by digit length or minimum EP
