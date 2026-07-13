@@ -84,9 +84,9 @@ a:hover { color: var(--text); }
 </head>
 <body>
 <header>
-  <div><h1>RNGdle EP Explorer</h1><div class="subtitle">Scores for 0 – 999,999 · <a href="https://github.com/CubityFirst/rngdle-ep-calculator" target="_blank">rngdle-ep-calculator</a></div></div>
+  <div><h1>RNGdle EP Explorer</h1><div class="subtitle">Scores for 0 – 1,000,000 · <a href="https://github.com/CubityFirst/rngdle-ep-calculator" target="_blank">rngdle-ep-calculator</a></div></div>
   <div class="controls">
-    <select id="filterLen"><option value="0">All lengths</option><option value="1">1 digit</option><option value="2">2 digits</option><option value="3">3 digits</option><option value="4">4 digits</option><option value="5">5 digits</option><option value="6">6 digits</option></select>
+    <select id="filterLen"><option value="0">All lengths</option><option value="1">1 digit</option><option value="2">2 digits</option><option value="3">3 digits</option><option value="4">4 digits</option><option value="5">5 digits</option><option value="6">6 digits</option><option value="7">7 digits</option></select>
     <select id="sortSelect"><option value="ep-desc">EP ↓</option><option value="ep-asc">EP ↑</option><option value="num">Number</option><option value="count">Badge count</option></select>
     <label style="font-size:12px;color:var(--text-2)">≥ <input type="number" id="minEp" value="0" style="width:70px"></label>
     <input type="text" id="searchNum" placeholder="Search number…" style="width:110px;font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:3px">
@@ -186,6 +186,7 @@ var BADGES=[
 ['DIGIT_SEVEN','Seven','7\uFE0F\u20E3',100000100,'Mythic',function(c){return c.n===7}],
 ['DIGIT_EIGHT','Eight','8\uFE0F\u20E3',100000100,'Mythic',function(c){return c.n===8}],
 ['DIGIT_NINE','Nine','9\uFE0F\u20E3',100000100,'Mythic',function(c){return c.n===9}],
+['ONE_MILLION','One Million','\u{1F410}',100000100,'Mythic',function(c){return c.n===1000000}],
 ['TREE_FIDDY_EXACT','Exact Tree Fiddy','\u{1F995}',100000100,'Mythic',function(c){return c.n===350}],
 ['SIXTY_SEVEN_EXACT','Exact Six-Seven','\u{1FAE0}',100000100,'Mythic',function(c){return c.n===67}],
 ['EIGHTY_SIX_EXACT','Exact Eighty-Six','\u{1F37D}\uFE0F',100000100,'Mythic',function(c){return c.n===86}],
@@ -455,7 +456,7 @@ function compute(n){
 // UI
 // ============================================================
 var ROWS_PER_PAGE=100;
-var TOTAL_NUMBERS=1000000;
+var TOTAL_NUMBERS=1000001;
 var allData=[];
 var currentPage=1;
 var sortField='totalEP';
@@ -840,14 +841,14 @@ loadBinaryCache().catch(function(){
         setTimeout(processChunk,50);
       });
     }else{
-      pText.textContent='Computing 0 \u2013 999,999\u2026';
+pText.textContent='Computing 0 \u2013 1,000,000\u2026';
       startTime=Date.now();
       setTimeout(processChunk,50);
     }
   });
 }).catch(function(err){
   console.warn('All cache methods failed, computing fresh',err);
-  pText.textContent='Computing 0 \u2013 999,999\u2026';
+  pText.textContent='Computing 0 \u2013 1,000,000\u2026';
   startTime=Date.now();
   setTimeout(processChunk,50);
 });
