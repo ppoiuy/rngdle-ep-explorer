@@ -364,7 +364,34 @@ var BADGES=[
 ['VOID','Void','\u{1F573}\uFE0F',167,'Common',function(c){return!c.has('0')}],
 ['NEIGHBORS','Neighbors','\u{1F3D8}\uFE0F',161,'Common',function(c){for(var i=0;i+1<c.len;i++)if(Math.abs(c.d[i]-c.d[i+1])===1)return true;return false}],
 ['PAIR','Pair','\u{1F46F}',120,'Common',function(c){return c.maxCount>=2}],
-['SIX_DIGITS','Six Digits','\u{1F41D}',111,'Common',function(c){return c.len===6}]
+['SIX_DIGITS','Six Digits','\u{1F41D}',111,'Common',function(c){return c.len===6}],
+// New badges (2024+ update)
+['STEPS','Steps','\u{2B06}',20202,'Rare',function(c){for(var i=1;i<c.len;i++)if(c.d[i]<c.d[i-1])return false;return true}],
+['SLOPES','Slopes','\u{2B07}',12582,'Rare',function(c){for(var i=1;i<c.len;i++)if(c.d[i]>c.d[i-1])return false;return true}],
+['MESA','Mesa','\u{1F5FB}',1568,'Uncommon',function(c){if(c.len<3)return false;var i=1;while(i<c.len&&c.d[i]>=c.d[i-1])i++;if(i===1||i===c.len)return false;while(i<c.len&&c.d[i]<=c.d[i-1])i++;return i===c.len}],
+['CANYON','Canyon','\u{1F3DE}',1184,'Uncommon',function(c){if(c.len<3)return false;var i=1;while(i<c.len&&c.d[i]<=c.d[i-1])i++;if(i===1||i===c.len)return false;while(i<c.len&&c.d[i]>=c.d[i-1])i++;return i===c.len}],
+['DUNES','Dunes','\u{1F3DD}',364,'Common',function(c){if(c.len<3)return false;var p=0;for(var i=1;i<c.len;i++){var di=c.d[i]-c.d[i-1];if(di===0)continue;var s=di>0?1:-1;if(p!==0&&s===p)return false;p=s}return p!==0}],
+['POCKET_MIRROR','Pocket Mirror','\u{1FA9E}',2124,'Uncommon',function(c){for(var i=0;i<c.s.length;i++)for(var j=i+4;j<=c.s.length;j++){var sub=c.s.slice(i,j);if(sub===sub.split('').reverse().join(''))return true}return false}],
+['METRONOME','Metronome','\u{23F1}',17784,'Rare',function(c){for(var t=1;t<c.s.length;t++){var a=parseInt(c.s.slice(0,t),10);if(c.s[0]==='0'&&t>1)continue;if(t===c.s.length)continue;for(var u=1;u<c.s.length-t;u++){var p2=c.s.slice(t,t+u);if(p2[0]==='0'&&u>1)continue;var b=parseInt(p2,10);var d=b-a;var idx=t+u,cnt=2;while(idx<c.s.length){var nxt=a+cnt*d;var ns=String(nxt);if(c.s.indexOf(ns,idx)!==idx)break;idx+=ns.length;cnt++}if(idx===c.s.length&&cnt>=3)return true}}return false}],
+['CRESCENDO','Crescendo','\u{1F4EF}',208334,'Epic',function(c){for(var t=1;t<c.s.length;t++){var a=parseInt(c.s.slice(0,t),10);if(c.s[0]==='0'&&t>1)continue;if(a===0||t===c.s.length)continue;for(var u=1;u<c.s.length-t;u++){var p2=c.s.slice(t,t+u);if(p2[0]==='0'&&u>1)continue;var b=parseInt(p2,10);if(b%a!==0)continue;var r=b/a;var idx=t+u,cnt=2;while(idx<c.s.length){var nxt=a*Math.pow(r,cnt);var ns=String(nxt);if(c.s.indexOf(ns,idx)!==idx)break;idx+=ns.length;cnt++}if(idx===c.s.length&&cnt>=3)return true}}return false}],
+['EQUATION','Equation','\u{2795}',7720,'Uncommon',function(c){var s=c.s;for(var eq=1;eq<s.length;eq++){var left=s.slice(0,eq),right=s.slice(eq);for(var op=1;op<left.length;op++){var a=left.slice(0,op),b=left.slice(op);if((a.length>1&&a[0]==='0')||(b.length>1&&b[0]==='0'))continue;var va=parseInt(a,10),vb=parseInt(b,10),vr=parseInt(right,10);if(isNaN(va)||isNaN(vb)||isNaN(vr))continue;if(va+vb===vr||va-vb===vr||va*vb===vr||(vb!==0&&va/vb===vr&&va%vb===0))return true}for(var op=1;op<right.length;op++){var a=right.slice(0,op),b=right.slice(op);if((a.length>1&&a[0]==='0')||(b.length>1&&b[0]==='0'))continue;var va=parseInt(left,10),vb=parseInt(a,10),vc=parseInt(b,10);if(isNaN(va)||isNaN(vb)||isNaN(vc))continue;if(vb+vc===va||vb-vc===va||vb*vc===va||(vc!==0&&vb/vc===va&&vb%vc===0))return true}}return false}],
+['FIVE_OF_A_KIND','Five of a Kind','\u{1F590}\uFE0F',198020,'Epic',function(c){return c.maxCount>=5}],
+['FRAMED_QUAD','Framed Quad','\u{1F5BC}\uFE0F',137174,'Epic',function(c){return c.len===6&&c.d[1]===c.d[2]&&c.d[2]===c.d[3]&&c.d[3]===c.d[4]&&c.d[0]!==c.d[1]&&c.d[5]!==c.d[4]}],
+['OUROBOROS','Ouroboros','\u{267E}',14285729,'Mythic',function(c){return[1,4,27,256,3125,46656,823543].includes(c.n)}],
+['POWER_OF_FIVE','Power of Five','5\uFE0F\u20E3',11111122,'Mythic',function(c){if(c.n<=0)return false;var v=1;while(v<c.n)v*=5;return v===c.n}],
+['POWER_OF_SEVEN','Power of Seven','7\uFE0F\u20E3',12500013,'Mythic',function(c){if(c.n<=0)return false;var v=1;while(v<c.n)v*=7;return v===c.n}],
+['TAU','Tau','\u{1F501}',33333367,'Mythic',function(c){return[6283,62831,628318].includes(c.n)}],
+['TAU_SLICE_5','Tau Slice (5)','\u{1F9E9}',5000005,'Anomaly',function(c){return c.has('62831')}],
+['TAU_SLICE_4','Tau Slice (4)','\u{1F9E9}',333334,'Epic',function(c){return c.has('6283')}],
+['GOLDEN_RATIO','Golden Ratio','\u{2728}',33333367,'Mythic',function(c){return[1618,16180,161803].includes(c.n)}],
+['ALWAYS','Always','\u{23F0}',50000050,'Mythic',function(c){return c.n===247365||c.n===365247}],
+['FULL_DAY','Full Day','\u{1F550}',100000100,'Mythic',function(c){return c.n===86400}],
+['ONE_SEVEN_SEVEN_SEVEN_SIX','17776','\u{1F522}',100000100,'Mythic',function(c){return c.n===17776}],
+['NOT_FOUND','Not Found','\u{2753}',100000100,'Mythic',function(c){return c.n===404}],
+['INFERNAL','Infernal','\u{1F525}',100000100,'Mythic',function(c){return c.n===666666}],
+['FUNNY_NUMBERS','Funny Numbers','\u{1F602}',1666668,'Anomaly',function(c){return c.has('69')&&c.has('420')}],
+['FUNNY_NUMBER','Funny Number','\u{1F602}',50000050,'Mythic',function(c){return c.n===69420||c.n===42069}],
+['MINI_SCRAMBLE','Mini Scramble','\u{1F500}',579,'Common',function(c){for(var i=0;i+2<c.s.length;i++){var sub=c.s.slice(i,i+3).split('').map(Number);var sorted=[...sub].sort(function(a,b){return a-b});if(sorted[1]-sorted[0]===1&&sorted[2]-sorted[1]===1)return true}return false}]
 ];
 
 var DESCRIPTIONS={};
@@ -375,12 +402,16 @@ for(var i=0;i<_d.length;i++)DESCRIPTIONS[_d[i][0]]=_d[i][1];
 // Probabilities
 var _p=[['NICE_EXACT',0.0001],['JACKPOT_EXACT',0.0001],['JACKPOT_SIX',0.0001],['BOTANIST_EXACT',0.0001],['DEVIL_EXACT',0.0001],['LEET_EXACT',0.0001],['EXACT_HELL',0.0001],['EXACT_BOOB_80085',0.0001],['MEANING_EXACT',0.0001],['EMERGENCY_EXACT',0.0001],['VERY_VERY_NICE',0.0001],['HOTBOX',0.0001],['MAYDAY',0.0001],['UNIVERSAL_ANSWER',0.0001],['BIG_BROTHER_EXACT',0.0001],['DIGIT_ZERO',0.0001],['DIGIT_ONE',0.0001],['DIGIT_TWO',0.0001],['DIGIT_THREE',0.0001],['DIGIT_FOUR',0.0001],['DIGIT_FIVE',0.0001],['DIGIT_SIX',0.0001],['DIGIT_SEVEN',0.0001],['DIGIT_EIGHT',0.0001],['DIGIT_NINE',0.0001],['ONE_MILLION',0.0001],['TREE_FIDDY_EXACT',0.0001],['SIXTY_SEVEN_EXACT',0.0001],['EIGHTY_SIX_EXACT',0.0001],['ORIENTATION_EXACT',0.0001],['CALENDAR_EXACT',0.0001],['BRAINROT',0.0001],['GROUNDHOG_DAY',0.0001],['EXACT_BOOB',0.0002],['THIRTEENTH_POWER',0.0001],['SEVENTEENTH_POWER',0.0001],['NINETEENTH_POWER',0.0001],['TENTH_POWER',0.0002],['ELEVENTH_POWER',0.0002],['PI',0.0004],['E',0.0004],['CONSEC_QUAD_EXACT',0.0008],['NINTH_POWER',0.0003],['EIGHTH_POWER',0.0004],['SEVENTH_POWER',0.0006],['FACTORIAL',0.0009],['HELLO',0.0009],['SEQUENCE_6',0.0004],['CONTIGUOUS_SIXES',0.0009],['DEEP_VOID_FIVE',0.0009],['ONE_DIGIT',0.001],['QUINT_NINE',0.001],['SIXTH_POWER',0.0008],['POWER_OF_THREE',0.0012],['FIFTH_POWER',0.0014],['JACKPOT_FIVE',0.0019],['POWER_OF_TWO',0.0019],['ROYAL_FLUSH',0.002],['BOOB_58008',0.002],['BOOB_80085',0.002],['PI_CONTAINS_5',0.002],['E_CONTAINS_5',0.002],['CASCADE',0.003],['FIBONACCI',0.003],['FOURTH_POWER',0.003],['WATERFALL',0.0035],['CONSEC_QUAD_CONTAINS',0.19],['CONSEC_QUAD_SCRAMBLED',0.0202],['HOMOGENEOUS',0.0045],['BINARY_SOUL',0.0064],['STRAIGHT_FLUSH',0.0069],['TWO_DIGITS',0.009],['SPY',0.0089],['QUAD_NINE',0.01],['SEMI_EPOCH',0.01],['CUBE',0.0098],['EVEN_SPACING',0.0116],['CONSEC_TRIPLE_EXACT',0.0097],['CONTIGUOUS_FIVES',0.018],['DEEP_VOID_FOUR',0.018],['STROBOGRAMMATIC',0.0199],['STRAIGHT',0.022],['JACKPOT_FOUR',0.028],['VERY_NICE',0.0299],['DEEPER_MEANING',0.0299],['SIXTY_SEVEN_DOUBLE',0.0299],['LEET',0.03],['HELL',0.03],['BOOB_8008',0.03],['BIG_BROTHER',0.03],['PI_CONTAINS_4',0.03],['E_CONTAINS_4',0.03],['CONSEC_TRIPLE_SCRAMBLED',0.0489],['ZIPPER',0.0324],['ASCENSION',0.0456],['CONSEC_TRIPLE_CONTAINS',2.9234],['CONTIGUOUS_THREE_PAIR',0.09],['FRAMED_PAIR',0.0729],['FRAMED_TRIPLE',0.0729],['DECAY',0.0837],['THREE_DIGITS',0.09],['ECHO',0.099],['MILLENNIUM',0.0999],['PRONIC',0.1],['TRIPLE_NINE',0.1],['SEMI_MILLENNIUM',0.1],['COLOSSAL',0.0999],['SQUARE',0.0998],['EVEN_SPACING_ABS',0.1099],['FIREFLY',0.1458],['CONSEC_PAIR_EXACT',0.099],['PALINDROME',0.1989],['CONTIGUOUS_QUADS',0.27],['DEEP_VOID_THREE',0.27],['TURTLE',0.2773],['SECRET_AGENT',0.2889],['HEAVY',0.3003],['CONTIGUOUS_BOAT',0.3321],['JACKPOT',0.37],['DEVIL',0.37],['SEQUENCE_4',0.188],['ERROR',0.3979],['ORIENTATION',0.3979],['BOTANIST',0.3999],['EMERGENCY',0.3999],['PI_CONTAINS_3',0.3999],['E_CONTAINS_3',0.3999],['TREE_FIDDY',0.3999],['CALENDAR',0.3999],['DIVISIBLE_BY_THREE',0.4096],['SCRAMBLE',0.4401],['DUALITY',0.4617],['FRAMED_DOUBLE',0.6561],['PAIRED_BOOKENDS',0.8991],['FOUR_DIGITS',0.9],['THREE_PAIR',0.972],['BOOKENDS',0.999],['MIRROR_BOOKENDS',0.999],['CENTURY',0.9999],['DOUBLE_NINE',1],['SEMI_CENTURY',1],['QUADS',1.1853],['LOW_BALL',1.5625],['CONTIGUOUS_TWO_PAIR',2.781],['MOUNTAIN',1.6992],['DOUBLE_HOP',1.881],['HIGH_ROLLER',1.953],['VALLEY',2.3817],['MINI_ECHO',2.7],['ALTERNATOR',3.5145],['FLUSH',3.5145],['CONTIGUOUS_TRIPS',3.5919],['DEEP_VOID',3.5919],['FEATHER',3.75],['BLACKJACK',3.9662],['BOAT',4.1715],['SNAKE_EYES',4.7139],['NICE',4.9401],['MEANING',4.9401],['SIXTY_SEVEN',4.9401],['EIGHTY_SIX',4.9401],['BALANCED',5.7276],['RHYME',8.6139],['SEQUENCE_3',2.8848],['CONSEC_PAIR_ADJACENT',3.1273],['CONSEC_PAIR_NEARBY',3.2022],['PRIME',7.8498],['TRINITY',7.9056],['DOZEN',8.3334],['FIVE_DIGITS',9],['ELEVEN',9.091],['HARSHAD',9.5427],['CLEAN',10],['SEMI_CLEAN',10],['EQUILIBRIUM',9.9999],['SANDWICH',9.9954],['HILLS',13.695],['TRIPS',14.9886],['LUCKY_SEVEN_DIV',14.2858],['HETEROGENEOUS',16.8561],['GAP_ONE',18.8887],['TWO_PAIR',26.5518],['HOPSCOTCH',33.57],['GHOST',32.3848],['QUARTET',34.4736],['HYDROGEN',35.4294],['HELIUM',35.4294],['CARBON',35.4294],['OXYGEN',35.4294],['LITHIUM',35.4294],['BERYLLIUM',35.4294],['BORON',35.4294],['NITROGEN',35.4294],['FLUORINE',35.4294],['GROUNDED',39.9996],['CONTIGUOUS_PAIR',40.2129],['LUCKY_7',46.8559],['EVEN',50],['ODD',50],['LIFTOFF',49.9995],['VOID',59.787],['NEIGHBORS',89.6109],['PAIR',83.1429],['SIX_DIGITS',90]];
 for(var i=0;i<_p.length;i++)PROBABILITIES[_p[i][0]]=_p[i][1];
+// New badge descriptions
+DESCRIPTIONS['STEPS']='Digits never decrease.';DESCRIPTIONS['SLOPES']='Digits never increase.';DESCRIPTIONS['MESA']='Digits rise to a peak, then fall (flat stretches allowed).';DESCRIPTIONS['CANYON']='Digits fall to a floor, then rise (flat stretches allowed).';DESCRIPTIONS['DUNES']='Rises and falls keep alternating (flat stretches allowed).';DESCRIPTIONS['POCKET_MIRROR']='Contains a palindrome of 4 or more digits.';DESCRIPTIONS['METRONOME']='Splits into three or more numbers with a constant difference.';DESCRIPTIONS['CRESCENDO']='Splits into three or more numbers with a constant ratio.';DESCRIPTIONS['EQUATION']='Insert one of + - \u00D7 \u00F7 and = to make a true equation.';DESCRIPTIONS['FIVE_OF_A_KIND']='Contains five identical digits.';DESCRIPTIONS['FRAMED_QUAD']='Four of a kind in the middle, bookended by different digits.';DESCRIPTIONS['OUROBOROS']='A number raised to itself: n^n (1\u00B9, 2\u00B2, \u2026 7\u2077).';DESCRIPTIONS['POWER_OF_FIVE']='A power of five (5^n).';DESCRIPTIONS['POWER_OF_SEVEN']='A power of seven (7^n).';DESCRIPTIONS['TAU']='Exactly \u03C4 (6283, 62831, or 628318).';DESCRIPTIONS['TAU_SLICE_5']='Contains "62831".';DESCRIPTIONS['TAU_SLICE_4']='Contains "6283".';DESCRIPTIONS['GOLDEN_RATIO']='Exactly \u03C6 (1618, 16180, or 161803).';DESCRIPTIONS['ALWAYS']='Exactly "247365" or "365247" (24/7, 365).';DESCRIPTIONS['FULL_DAY']='Exactly "86400", the number of seconds in a day.';DESCRIPTIONS['ONE_SEVEN_SEVEN_SEVEN_SIX']='Exactly "17776".';DESCRIPTIONS['NOT_FOUND']='Exactly "404".';DESCRIPTIONS['INFERNAL']='Exactly "666666".';DESCRIPTIONS['FUNNY_NUMBERS']='Contains both "69" and "420".';DESCRIPTIONS['FUNNY_NUMBER']='Exactly "69420" or "42069".';DESCRIPTIONS['MINI_SCRAMBLE']='Contains 3 or more adjacent digits that form a run when sorted.';
+// New badge probabilities
+PROBABILITIES['STEPS']=0.49;PROBABILITIES['SLOPES']=0.79;PROBABILITIES['MESA']=6.4;PROBABILITIES['CANYON']=8.4;PROBABILITIES['DUNES']=27.5;PROBABILITIES['POCKET_MIRROR']=4.7;PROBABILITIES['METRONOME']=0.56;PROBABILITIES['CRESCENDO']=0.05;PROBABILITIES['EQUATION']=1.3;PROBABILITIES['FIVE_OF_A_KIND']=0.05;PROBABILITIES['FRAMED_QUAD']=0.07;PROBABILITIES['OUROBOROS']=0.0007;PROBABILITIES['POWER_OF_FIVE']=0.0009;PROBABILITIES['POWER_OF_SEVEN']=0.0008;PROBABILITIES['TAU']=0.0003;PROBABILITIES['TAU_SLICE_5']=0.002;PROBABILITIES['TAU_SLICE_4']=0.03;PROBABILITIES['GOLDEN_RATIO']=0.0003;PROBABILITIES['ALWAYS']=0.0002;PROBABILITIES['FULL_DAY']=0.0001;PROBABILITIES['ONE_SEVEN_SEVEN_SEVEN_SIX']=0.0001;PROBABILITIES['NOT_FOUND']=0.0001;PROBABILITIES['INFERNAL']=0.0001;PROBABILITIES['FUNNY_NUMBERS']=0.01;PROBABILITIES['FUNNY_NUMBER']=0.0002;PROBABILITIES['MINI_SCRAMBLE']=17.3;
 
 var FAMILIES=[
 ['THIRTEENTH_POWER','SEVENTEENTH_POWER','NINETEENTH_POWER','TENTH_POWER','ELEVENTH_POWER','NINTH_POWER','EIGHTH_POWER','SEVENTH_POWER','SIXTH_POWER','FIFTH_POWER','FOURTH_POWER','CUBE','SQUARE'],
 ['DIGIT_ZERO','DIGIT_ONE','DIGIT_TWO','DIGIT_THREE','DIGIT_FOUR','DIGIT_FIVE','DIGIT_SIX','DIGIT_SEVEN','DIGIT_EIGHT','DIGIT_NINE','ONE_DIGIT'],
 ['CONSEC_QUAD_EXACT','CONSEC_QUAD_CONTAINS','CONSEC_QUAD_SCRAMBLED','CONSEC_TRIPLE_EXACT','CONSEC_TRIPLE_SCRAMBLED','CONSEC_TRIPLE_CONTAINS','CONSEC_PAIR_EXACT','CONSEC_PAIR_ADJACENT','CONSEC_PAIR_NEARBY'],
-['SEQUENCE_6','CASCADE','WATERFALL','EVEN_SPACING','EVEN_SPACING_ABS','TURTLE','SEQUENCE_4','SCRAMBLE','SEQUENCE_3'],
+['SEQUENCE_6','CASCADE','WATERFALL','EVEN_SPACING','EVEN_SPACING_ABS','TURTLE','SEQUENCE_4','SCRAMBLE','SEQUENCE_3','MINI_SCRAMBLE'],
 ['CONTIGUOUS_THREE_PAIR','FRAMED_PAIR','FRAMED_DOUBLE','THREE_PAIR','CONTIGUOUS_TWO_PAIR','TWO_PAIR','CONTIGUOUS_PAIR','PAIR'],
 ['EXACT_BOOB_80085','EXACT_BOOB','BOOB_58008','BOOB_80085','BOOB_8008'],
 ['BOTANIST_EXACT','MEANING_EXACT','HOTBOX','BOTANIST','MEANING'],
@@ -395,11 +426,11 @@ var FAMILIES=[
 ['PAIRED_BOOKENDS','BOOKENDS','MIRROR_BOOKENDS'],
 ['CALENDAR_EXACT','GROUNDHOG_DAY','CALENDAR'],
 ['EMERGENCY_EXACT','MAYDAY','EMERGENCY'],
-['FRAMED_TRIPLE','QUADS','TRIPS'],
+['FRAMED_TRIPLE','FRAMED_QUAD','QUADS','TRIPS','FIVE_OF_A_KIND'],
 ['ROYAL_FLUSH','STRAIGHT_FLUSH','STRAIGHT'],
 ['BIG_BROTHER_EXACT','BIG_BROTHER'],
 ['CONTIGUOUS_BOAT','BOAT'],
-['DEVIL_EXACT','DEVIL'],
+['DEVIL_EXACT','DEVIL','INFERNAL'],
 ['FIREFLY','DUALITY'],
 ['EIGHTY_SIX_EXACT','EIGHTY_SIX'],
 ['EQUILIBRIUM','SANDWICH'],
@@ -407,11 +438,14 @@ var FAMILIES=[
 ['DOUBLE_HOP','HOPSCOTCH'],
 ['LEET_EXACT','LEET'],
 ['UNIVERSAL_ANSWER','DEEPER_MEANING'],
-['ASCENSION','DECAY'],
+['ASCENSION','DECAY','STEPS','SLOPES'],
 ['ORIENTATION_EXACT','ORIENTATION'],
-['MOUNTAIN','VALLEY'],
+['MOUNTAIN','VALLEY','MESA','CANYON'],
 ['MINI_ECHO','RHYME'],
-['TREE_FIDDY_EXACT','TREE_FIDDY']
+['TREE_FIDDY_EXACT','TREE_FIDDY'],
+['TAU','TAU_SLICE_5','TAU_SLICE_4'],
+['FUNNY_NUMBERS','FUNNY_NUMBER'],
+['NOT_FOUND','ERROR']
 ];
 
 // ============================================================
