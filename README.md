@@ -8,3 +8,9 @@ Browse all 1,000,001 possible RNGdle numbers (0–1,000,000) and their total EP.
 - Spoof a share card for any number as if you rolled it yourself
 
 [Page](https://ppoiuy.github.io/rngdle-ep-explorer)
+
+
+
+
+to do:
+implementation of badges superceding other badges within its family
